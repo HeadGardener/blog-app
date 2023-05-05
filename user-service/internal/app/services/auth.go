@@ -4,16 +4,13 @@ import (
 	"context"
 	"crypto/sha1"
 	"fmt"
-	"github.com/HeadGardener/user-service/internal/app/models"
-	"github.com/HeadGardener/user-service/internal/app/repositories"
+	"github.com/HeadGardener/blog-app/user-service/internal/app/models"
+	"github.com/HeadGardener/blog-app/user-service/internal/app/repositories"
 	"github.com/google/uuid"
-	"time"
 )
 
 const (
-	salt      = "qetuoadgjlzcbmwryipsfhkxvn"
-	tokenTTL  = 15 * time.Minute
-	secretKey = "qazwsxedcrfvtgbyhnujm"
+	salt = "qetuoadgjlzcbmwryipsfhkxvn"
 )
 
 type AuthService struct {
@@ -33,7 +30,7 @@ func (s *AuthService) Create(ctx context.Context, userInput models.CreateUserInp
 		PasswordHash: getPasswordHash(userInput.Password),
 	}
 
-	return s.repository.Create(ctx, user)
+	return s.repository.Authorization.Create(ctx, user)
 }
 
 func getPasswordHash(password string) string {

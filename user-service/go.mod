@@ -1,4 +1,4 @@
-module github.com/HeadGardener/user-service
+module github.com/HeadGardener/blog-app/user-service
 
 go 1.20
 

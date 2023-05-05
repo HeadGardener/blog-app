@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
-	"github.com/HeadGardener/user-service/internal/app/services"
+	"github.com/HeadGardener/blog-app/user-service/internal/app/services"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
@@ -41,6 +41,7 @@ func InitRoutes(h *Handler) http.Handler {
 
 	r.Route("/api/users", func(r chi.Router) {
 		r.Post("/sign-up", h.signUp)
+		r.Get("/", h.getUser)
 	})
 
 	return r

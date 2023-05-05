@@ -2,7 +2,7 @@ package repositories
 
 import (
 	"context"
-	"github.com/HeadGardener/user-service/internal/app/models"
+	"github.com/HeadGardener/blog-app/user-service/internal/app/models"
 	"go.mongodb.org/mongo-driver/mongo"
 	"time"
 )

@@ -20,11 +20,28 @@ type CreateUserInput struct {
 	Password string `json:"password"`
 }
 
+type LogUserInput struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 func (u *CreateUserInput) Validate() error {
 	if u.Name == "" || u.Surname == "" {
 		return errors.New("name fields can't be empty")
 	}
 
+	if !strings.Contains(u.Email, "@") {
+		return errors.New("invalid email")
+	}
+
+	if len([]rune(u.Password)) < 8 {
+		return errors.New("invalid password size")
+	}
+
+	return nil
+}
+
+func (u *LogUserInput) Validate() error {
 	if !strings.Contains(u.Email, "@") {
 		return errors.New("invalid email")
 	}
