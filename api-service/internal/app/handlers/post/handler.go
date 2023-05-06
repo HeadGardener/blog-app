@@ -25,6 +25,7 @@ func (h *Handler) InitRoutes(router *chi.Mux) {
 	r.Route("/", func(r chi.Router) {
 		r.Use(mw.IdentifyUser)
 		r.Post("/", h.createPost)
+		r.Get("/{post_id}", h.getByID)
 	})
 
 	router.Mount("/api/post", r)

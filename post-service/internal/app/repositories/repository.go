@@ -8,6 +8,7 @@ import (
 
 type PostInterface interface {
 	Create(ctx context.Context, post models.Post) (string, error)
+	GetByID(ctx context.Context, postID string) (models.Post, error)
 }
 
 type Repository struct {

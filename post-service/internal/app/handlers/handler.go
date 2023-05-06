@@ -11,8 +11,6 @@ import (
 	"time"
 )
 
-const UserCtx = "userAtr"
-
 type Handler struct {
 	service   *services.Service
 	errLogger *zap.Logger
@@ -43,6 +41,7 @@ func (h *Handler) InitRoutes() http.Handler {
 
 	r.Route("/api/post", func(r chi.Router) {
 		r.Post("/", h.createPost)
+		r.Get("/{post_id}", h.getByID)
 	})
 	return r
 }

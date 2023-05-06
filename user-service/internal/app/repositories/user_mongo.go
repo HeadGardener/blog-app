@@ -5,6 +5,7 @@ import (
 	"github.com/HeadGardener/blog-app/user-service/internal/app/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"time"
 )
 
 type UserRepository struct {
@@ -16,7 +17,10 @@ func NewUserRepository(db *mongo.Collection) *UserRepository {
 }
 
 func (r *UserRepository) GetUser(ctx context.Context, user models.User) (models.User, error) {
-	result := r.db.FindOne(ctx, bson.D{
+	insertCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	result := r.db.FindOne(insertCtx, bson.D{
 		{"email", user.Email},
 		{"passwordhash", user.PasswordHash}})
 

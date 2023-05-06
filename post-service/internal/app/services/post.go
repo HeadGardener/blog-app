@@ -27,3 +27,7 @@ func (s *PostService) Create(ctx context.Context, postInput models.CreatePostInp
 
 	return s.repository.PostInterface.Create(ctx, post)
 }
+
+func (s *PostService) GetByID(ctx context.Context, postID string) (models.Post, error) {
+	return s.repository.PostInterface.GetByID(ctx, postID)
+}

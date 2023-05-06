@@ -8,6 +8,7 @@ import (
 
 type PostInterface interface {
 	Create(ctx context.Context, postInput models.CreatePostInput) (string, error)
+	GetByID(ctx context.Context, postID string) (models.Post, error)
 }
 
 type Service struct {

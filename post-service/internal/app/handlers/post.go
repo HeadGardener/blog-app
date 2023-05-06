@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"github.com/HeadGardener/blog-app/post-service/internal/app/models"
+	"github.com/go-chi/chi/v5"
 	"net/http"
 )
 
@@ -28,4 +29,16 @@ func (h *Handler) createPost(w http.ResponseWriter, r *http.Request) {
 	newResponse(w, http.StatusCreated, map[string]interface{}{
 		"id": postID,
 	})
+}
+
+func (h *Handler) getByID(w http.ResponseWriter, r *http.Request) {
+	postID := chi.URLParam(r, "post_id")
+
+	post, err := h.service.PostInterface.GetByID(r.Context(), postID)
+	if err != nil {
+		h.newErrResponse(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	newResponse(w, http.StatusOK, post)
 }
