@@ -25,6 +25,11 @@ type LogUserInput struct {
 	Password string `json:"password"`
 }
 
+type UserAttributes struct {
+	ID    string `json:"user_id"`
+	Email string `json:"email"`
+}
+
 func (u *CreateUserInput) Validate() error {
 	if u.Name == "" || u.Surname == "" {
 		return errors.New("name fields can't be empty")

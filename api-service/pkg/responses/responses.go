@@ -6,13 +6,13 @@ import (
 	"net/http"
 )
 
-type response struct {
+type ErrResponse struct {
 	Message string `json:"message"`
 }
 
 func NewErrResponse(w http.ResponseWriter, code int, errorMsg string, logger *zap.Logger) {
 	logger.Error(errorMsg)
-	NewResponse(w, code, response{
+	NewResponse(w, code, ErrResponse{
 		Message: errorMsg,
 	})
 }

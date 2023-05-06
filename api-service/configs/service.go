@@ -8,6 +8,7 @@ import (
 
 type ServiceConfig struct {
 	UserServiceURL string
+	PostServiceURL string
 }
 
 func NewServiceConfig(path string) (*ServiceConfig, error) {
@@ -18,10 +19,16 @@ func NewServiceConfig(path string) (*ServiceConfig, error) {
 
 	userServiceURL := os.Getenv("USER_SERVICE_URL")
 	if userServiceURL == "" {
-		return nil, errors.New("server port is empty")
+		return nil, errors.New("USER_SERVICE_URL is empty")
+	}
+
+	postServiceURL := os.Getenv("POST_SERVICE_URL")
+	if userServiceURL == "" {
+		return nil, errors.New("POST_SERVICE_URL is empty")
 	}
 
 	return &ServiceConfig{
 		UserServiceURL: userServiceURL,
+		PostServiceURL: postServiceURL,
 	}, nil
 }

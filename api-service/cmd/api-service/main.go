@@ -7,6 +7,8 @@ import (
 	"github.com/HeadGardener/blog-app/api-service/configs"
 	"github.com/HeadGardener/blog-app/api-service/internal/app/handlers"
 	"github.com/HeadGardener/blog-app/api-service/internal/app/handlers/auth"
+	"github.com/HeadGardener/blog-app/api-service/internal/app/handlers/post"
+	post_service "github.com/HeadGardener/blog-app/api-service/internal/app/services/post"
 	user_service "github.com/HeadGardener/blog-app/api-service/internal/app/services/user"
 	"github.com/HeadGardener/blog-app/api-service/internal/pkg/server"
 	"go.uber.org/zap"
@@ -39,6 +41,11 @@ func main() {
 	userService := user_service.NewUserService(serviceConfig.UserServiceURL, "users")
 	authHandler := auth.NewAuthHandler(userService)
 	authHandler.InitRoutes(router)
+
+	logger.Info("initializing post service...")
+	postService := post_service.NewPostService(serviceConfig.PostServiceURL, "post")
+	postHandler := post.NewPostHandler(postService)
+	postHandler.InitRoutes(router)
 
 	serverConfig, err := configs.NewServerConfig(*confPath)
 	if err != nil {

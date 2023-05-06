@@ -2,37 +2,11 @@ package auth
 
 import (
 	"encoding/json"
-	"github.com/HeadGardener/blog-app/api-service/internal/app/handlers"
 	"github.com/HeadGardener/blog-app/api-service/internal/app/models"
-	user_service "github.com/HeadGardener/blog-app/api-service/internal/app/services/user"
 	jwt_helper "github.com/HeadGardener/blog-app/api-service/pkg/jwt-helper"
 	"github.com/HeadGardener/blog-app/api-service/pkg/responses"
-	"github.com/go-chi/chi/v5"
-	"go.uber.org/zap"
 	"net/http"
 )
-
-type Handler struct {
-	userService user_service.UserService
-	errLogger   *zap.Logger
-}
-
-func NewAuthHandler(service user_service.UserService) *Handler {
-	return &Handler{
-		userService: service,
-		errLogger:   handlers.NewLogger(),
-	}
-}
-
-func (h *Handler) InitRoutes(router *chi.Mux) {
-	r := chi.NewRouter()
-	r.Route("/auth", func(r chi.Router) {
-		r.Post("/sign-up", h.signUp)
-		r.Post("/sign-in", h.signIn)
-	})
-
-	router.Mount("/api", r)
-}
 
 func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 	var userInput models.CreateUserInput

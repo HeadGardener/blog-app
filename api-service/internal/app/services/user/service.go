@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/HeadGardener/blog-app/api-service/internal/app/models"
 	"github.com/HeadGardener/blog-app/api-service/pkg/client"
+	"github.com/HeadGardener/blog-app/api-service/pkg/responses"
 	"net/http"
 	"time"
 )
@@ -34,10 +35,6 @@ type UserService interface {
 	GetUser(ctx context.Context, userInput models.LogUserInput) (models.User, error)
 }
 
-type errResponse struct {
-	Message string `json:"message"`
-}
-
 func (s *service) Create(ctx context.Context, userInput models.CreateUserInput) (string, error) {
 	url := fmt.Sprintf("%s/%s/sign-up", s.base.BaseURL, s.Resource)
 
@@ -61,7 +58,7 @@ func (s *service) Create(ctx context.Context, userInput models.CreateUserInput) 
 	}
 
 	if response.StatusCode != http.StatusCreated {
-		var errMsg errResponse
+		var errMsg responses.ErrResponse
 		if err := json.NewDecoder(response.Body).Decode(&errMsg); err != nil {
 			return "", fmt.Errorf("unpredictable error")
 		}
@@ -104,7 +101,7 @@ func (s *service) GetUser(ctx context.Context, userInput models.LogUserInput) (m
 	}
 
 	if response.StatusCode != http.StatusOK {
-		var errMsg errResponse
+		var errMsg responses.ErrResponse
 		if err := json.NewDecoder(response.Body).Decode(&errMsg); err != nil {
 			return models.User{}, fmt.Errorf("unpredictable error")
 		}
