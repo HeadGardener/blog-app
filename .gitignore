@@ -2,6 +2,6 @@
 bin
 .env
 
-/user-service/.idea/
-/post-service/.idea/
-/api-service/.idea/
+/user-service/.idea
+/post-service/.idea
+/api-service/.idea
