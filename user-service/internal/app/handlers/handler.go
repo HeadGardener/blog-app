@@ -41,7 +41,7 @@ func InitRoutes(h *Handler) http.Handler {
 
 	r.Route("/api/users", func(r chi.Router) {
 		r.Post("/sign-up", h.signUp)
-		r.Get("/", h.getUser)
+		r.Get("/", h.signIn)
 	})
 
 	return r

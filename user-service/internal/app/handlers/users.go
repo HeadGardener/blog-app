@@ -30,7 +30,7 @@ func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func (h *Handler) getUser(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 	var userInput models.LogUserInput
 
 	if err := json.NewDecoder(r.Body).Decode(&userInput); err != nil {

@@ -5,6 +5,7 @@ import (
 	"github.com/HeadGardener/blog-app/post-service/internal/app/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"time"
 )
 
@@ -42,4 +43,41 @@ func (r *PostRepository) GetByID(ctx context.Context, postID string) (models.Pos
 	}
 
 	return post, nil
+}
+
+func (r *PostRepository) GetPosts(ctx context.Context, userID string, postsAmount int) ([]models.Post, error) {
+	var posts []models.Post
+
+	insertCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	opts := options.Find().SetLimit(int64(postsAmount)).SetSort(bson.D{{"date", 1}})
+	cur, err := r.db.Find(insertCtx, bson.D{{
+		"userid", userID,
+	}}, opts)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := cur.All(insertCtx, &posts); err != nil {
+		return nil, err
+	}
+
+	return posts, nil
+}
+
+func (r *PostRepository) UpdatePost(ctx context.Context, post models.Post) (models.Post, error) {
+	var updatedPost models.Post
+
+	insertCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	opts := options.FindOneAndUpdate().SetUpsert(false)
+	filters := bson.D{{"id", post.ID}, {"userid", post.UserID}}
+	update := bson.D{{"$set", bson.D{{"title", post.Title}, {"body", post.Body}}}}
+	if err := r.db.FindOneAndUpdate(insertCtx, filters, update, opts).Decode(&updatedPost); err != nil {
+		return models.Post{}, err
+	}
+
+	return updatedPost, nil
 }

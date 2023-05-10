@@ -31,3 +31,18 @@ func (s *PostService) Create(ctx context.Context, postInput models.CreatePostInp
 func (s *PostService) GetByID(ctx context.Context, postID string) (models.Post, error) {
 	return s.repository.PostInterface.GetByID(ctx, postID)
 }
+
+func (s *PostService) GetPosts(ctx context.Context, userID string, postsAmount int) ([]models.Post, error) {
+	return s.repository.PostInterface.GetPosts(ctx, userID, postsAmount)
+}
+
+func (s *PostService) UpdatePost(ctx context.Context, postInput models.UpdatePostInput) (models.Post, error) {
+	post, err := s.repository.GetByID(ctx, postInput.ID)
+	if err != nil {
+		return models.Post{}, err
+	}
+
+	postInput.ToPost(&post)
+
+	return s.repository.PostInterface.UpdatePost(ctx, post)
+}

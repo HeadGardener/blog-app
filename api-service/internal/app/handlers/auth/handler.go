@@ -2,17 +2,17 @@ package auth
 
 import (
 	"github.com/HeadGardener/blog-app/api-service/internal/app/handlers"
-	user_service "github.com/HeadGardener/blog-app/api-service/internal/app/services/user"
+	userService "github.com/HeadGardener/blog-app/api-service/internal/app/services/user"
 	"github.com/go-chi/chi/v5"
 	"go.uber.org/zap"
 )
 
 type Handler struct {
-	userService user_service.UserService
+	userService userService.UserService
 	errLogger   *zap.Logger
 }
 
-func NewAuthHandler(service user_service.UserService) *Handler {
+func NewAuthHandler(service userService.UserService) *Handler {
 	return &Handler{
 		userService: service,
 		errLogger:   handlers.NewLogger(),

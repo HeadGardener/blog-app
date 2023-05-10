@@ -42,6 +42,8 @@ func (h *Handler) InitRoutes() http.Handler {
 	r.Route("/api/post", func(r chi.Router) {
 		r.Post("/", h.createPost)
 		r.Get("/{post_id}", h.getByID)
+		r.Get("/", h.getUserPosts)
+		r.Put("/", h.updatePost)
 	})
 	return r
 }

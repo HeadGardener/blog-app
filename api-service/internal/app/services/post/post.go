@@ -1,4 +1,4 @@
-package post_service
+package postService
 
 import (
 	"bytes"
@@ -85,5 +85,77 @@ func (s *service) GetPostByID(ctx context.Context, postID string) (models.Post, 
 		return models.Post{}, fmt.Errorf("error while decoding response: error: %w", err)
 	}
 
+	return post, nil
+}
+
+func (s *service) GetPosts(ctx context.Context, userID string, postsAmount string) ([]models.Post, error) {
+	url := fmt.Sprintf("%s/%s/?user_id=%s&amount=%s", s.base.BaseURL, s.Resource, userID, postsAmount)
+
+	req, err := http.NewRequest(http.MethodGet, url, bytes.NewBuffer([]byte("")))
+	if err != nil {
+		return nil, fmt.Errorf("failed to create request: error: %w", err)
+	}
+
+	reqCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	req = req.WithContext(reqCtx)
+	response, err := s.base.SendRequest(req)
+	defer response.Body.Close()
+	if err != nil {
+		return nil, fmt.Errorf("failed to send request: error: %w", err)
+	}
+
+	if response.StatusCode != http.StatusOK {
+		var errMsg responses.ErrResponse
+		if err := json.NewDecoder(response.Body).Decode(&errMsg); err != nil {
+			return nil, fmt.Errorf("unpredictable error")
+		}
+
+		return nil, fmt.Errorf("%s", errMsg.Message)
+	}
+
+	var posts []models.Post
+	if err := json.NewDecoder(response.Body).Decode(&posts); err != nil {
+		return nil, fmt.Errorf("error while decoding response: error: %w", err)
+	}
+
+	return posts, nil
+}
+
+func (s *service) UpdatePost(ctx context.Context, postInput models.UpdatePostInput) (models.Post, error) {
+	url := fmt.Sprintf("%s/%s/", s.base.BaseURL, s.Resource)
+
+	dataBytes, err := json.Marshal(postInput)
+	if err != nil {
+		return models.Post{}, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, url, bytes.NewBuffer(dataBytes))
+	if err != nil {
+		return models.Post{}, fmt.Errorf("failed to create request: error: %w", err)
+	}
+
+	reqCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	req = req.WithContext(reqCtx)
+	response, err := s.base.SendRequest(req)
+	defer response.Body.Close()
+	if err != nil {
+		return models.Post{}, fmt.Errorf("failed to send request: error: %w", err)
+	}
+
+	if response.StatusCode != http.StatusOK {
+		var errMsg responses.ErrResponse
+		if err := json.NewDecoder(response.Body).Decode(&errMsg); err != nil {
+			return models.Post{}, fmt.Errorf("unpredictable error")
+		}
+
+		return models.Post{}, fmt.Errorf("%s", errMsg.Message)
+	}
+
+	var post models.Post
+	if err := json.NewDecoder(response.Body).Decode(&post); err != nil {
+		return models.Post{}, fmt.Errorf("error while decoding response: error: %w", err)
+	}
 	return post, nil
 }

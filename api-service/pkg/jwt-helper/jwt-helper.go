@@ -1,4 +1,4 @@
-package jwt_helper
+package jwtHelper
 
 import (
 	"errors"

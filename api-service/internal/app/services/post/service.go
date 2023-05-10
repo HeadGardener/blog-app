@@ -1,4 +1,4 @@
-package post_service
+package postService
 
 import (
 	"context"
@@ -29,4 +29,6 @@ func NewPostService(baseURL, resource string) PostService {
 type PostService interface {
 	CreatePost(ctx context.Context, postInput models.CreatePostInput) (string, error)
 	GetPostByID(ctx context.Context, id string) (models.Post, error)
+	GetPosts(ctx context.Context, userID string, postsAmount string) ([]models.Post, error)
+	UpdatePost(ctx context.Context, postInput models.UpdatePostInput) (models.Post, error)
 }

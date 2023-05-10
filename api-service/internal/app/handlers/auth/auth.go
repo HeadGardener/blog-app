@@ -3,7 +3,7 @@ package auth
 import (
 	"encoding/json"
 	"github.com/HeadGardener/blog-app/api-service/internal/app/models"
-	jwt_helper "github.com/HeadGardener/blog-app/api-service/pkg/jwt-helper"
+	jwtHelper "github.com/HeadGardener/blog-app/api-service/pkg/jwt-helper"
 	"github.com/HeadGardener/blog-app/api-service/pkg/responses"
 	"net/http"
 )
@@ -51,7 +51,7 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := jwt_helper.GenerateToken(user)
+	token, err := jwtHelper.GenerateToken(user)
 	if err != nil {
 		responses.NewErrResponse(w, http.StatusInternalServerError, err.Error(), h.errLogger)
 		return
