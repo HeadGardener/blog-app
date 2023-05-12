@@ -24,7 +24,7 @@ func main() {
 
 	logger, err := zap.NewProduction()
 	if err != nil {
-		log.Fatal(fmt.Sprintf("error whilr creating logger: %s", err.Error()))
+		log.Fatal(fmt.Sprintf("error while creating logger: %s", err.Error()))
 	}
 
 	dbconfig, err := configs.NewDBConfig(*confPath)

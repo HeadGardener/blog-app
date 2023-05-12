@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"strings"
 	"time"
 )
 
@@ -32,7 +33,7 @@ type DeletePost struct {
 }
 
 func (p *CreatePostInput) Validate() error {
-	if p.Body == "" {
+	if strings.ReplaceAll(p.Body, " ", "") == "" {
 		return errors.New("post body can't be empty")
 	}
 

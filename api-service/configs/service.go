@@ -7,8 +7,9 @@ import (
 )
 
 type ServiceConfig struct {
-	UserServiceURL string
-	PostServiceURL string
+	UserServiceURL    string
+	PostServiceURL    string
+	CommentServiceURL string
 }
 
 func NewServiceConfig(path string) (*ServiceConfig, error) {
@@ -27,8 +28,14 @@ func NewServiceConfig(path string) (*ServiceConfig, error) {
 		return nil, errors.New("POST_SERVICE_URL is empty")
 	}
 
+	commentServiceURL := os.Getenv("COMMENT_SERVICE_URL")
+	if userServiceURL == "" {
+		return nil, errors.New("COMMENT_SERVICE_URL is empty")
+	}
+
 	return &ServiceConfig{
-		UserServiceURL: userServiceURL,
-		PostServiceURL: postServiceURL,
+		UserServiceURL:    userServiceURL,
+		PostServiceURL:    postServiceURL,
+		CommentServiceURL: commentServiceURL,
 	}, nil
 }

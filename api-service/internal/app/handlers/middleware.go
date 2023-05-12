@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/HeadGardener/blog-app/api-service/internal/app/models"
-	jwt_helper "github.com/HeadGardener/blog-app/api-service/pkg/jwt-helper"
+	jwtHelper "github.com/HeadGardener/blog-app/api-service/pkg/jwt-helper"
 	"github.com/HeadGardener/blog-app/api-service/pkg/responses"
 	"net/http"
 	"strings"
@@ -39,7 +39,7 @@ func IdentifyUser(next http.Handler) http.Handler {
 			return
 		}
 
-		userAttributes, err := jwt_helper.ParseToken(headerParts[1])
+		userAttributes, err := jwtHelper.ParseToken(headerParts[1])
 		if err != nil {
 			responses.NewErrResponse(w, http.StatusUnauthorized, err.Error(), mwLogger)
 			return

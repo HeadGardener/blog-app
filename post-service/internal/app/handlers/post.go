@@ -12,7 +12,7 @@ func (h *Handler) createPost(w http.ResponseWriter, r *http.Request) {
 	var postInput models.CreatePostInput
 
 	if err := json.NewDecoder(r.Body).Decode(&postInput); err != nil {
-		h.newErrResponse(w, http.StatusBadRequest, err.Error())
+		h.newErrResponse(w, http.StatusBadRequest, "invalid data to decode post input")
 		return
 	}
 

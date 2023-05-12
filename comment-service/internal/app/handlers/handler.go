@@ -2,9 +2,10 @@ package handlers
 
 import (
 	"encoding/json"
-	"github.com/HeadGardener/blog-app/api-service/internal/app/services"
+	"github.com/HeadGardener/blog-app/comment-service/internal/app/services"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
 	"go.uber.org/zap"
 	"net/http"
 	"time"
@@ -18,7 +19,7 @@ type Handler struct {
 func NewHandler(service *services.Service) *Handler {
 	return &Handler{
 		service:   service,
-		errLogger: NewLogger(),
+		errLogger: newLogger(),
 	}
 }
 
@@ -30,31 +31,21 @@ func (h *Handler) InitRoutes() http.Handler {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(60 * time.Second))
+	r.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:8080"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
+		AllowCredentials: true,
+		MaxAge:           300, // Maximum value not ignored by any of major browsers
+	}))
 
-	r.Route("/api", func(r chi.Router) {
-		r.Route("/auth", func(r chi.Router) {
-			r.Post("/sign-up", h.signUp)
-			r.Post("/sign-in", h.signIn)
-		})
-
-		r.Route("/post", func(r chi.Router) {
-			r.Use(IdentifyUser)
-			r.Post("/", h.createPost)
-			r.Get("/{post_id}", h.getByID)
-			r.Get("/", h.getUserPosts)
-			r.Put("/{post_id}", h.updatePost)
-			r.Delete("/{post_id}", h.deletePost)
-		})
-
-		r.Route("/comment", func(r chi.Router) {
-			r.Use(IdentifyUser)
-			r.Post("/", h.createComment)
-		})
+	r.Route("/api/comment", func(r chi.Router) {
+		r.Post("/", h.createComment)
 	})
 	return r
 }
 
-func NewLogger() *zap.Logger {
+func newLogger() *zap.Logger {
 	rawJSON := []byte(`{
 	  "level": "error",
 	  "encoding": "json",

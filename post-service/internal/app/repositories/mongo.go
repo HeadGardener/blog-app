@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	PostsCollection = "posts"
+	postsCollection = "posts"
 )
 
 func NewMongoDBCollection(ctx context.Context, config configs.DBConfig) (*mongo.Collection, error) {
@@ -32,5 +32,5 @@ func NewMongoDBCollection(ctx context.Context, config configs.DBConfig) (*mongo.
 
 	db := client.Database(config.DBName)
 
-	return db.Collection(PostsCollection), nil
+	return db.Collection(postsCollection), nil
 }

@@ -4,11 +4,11 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/HeadGardener/blog-app/user-service/configs"
-	"github.com/HeadGardener/blog-app/user-service/internal/app/handlers"
-	"github.com/HeadGardener/blog-app/user-service/internal/app/repositories"
-	"github.com/HeadGardener/blog-app/user-service/internal/app/services"
-	"github.com/HeadGardener/blog-app/user-service/internal/pkg/server"
+	"github.com/HeadGardener/blog-app/comment-service/configs"
+	"github.com/HeadGardener/blog-app/comment-service/internal/app/handlers"
+	"github.com/HeadGardener/blog-app/comment-service/internal/app/repositories"
+	"github.com/HeadGardener/blog-app/comment-service/internal/app/services"
+	"github.com/HeadGardener/blog-app/comment-service/internal/pkg/server"
 	"go.uber.org/zap"
 	"log"
 	"os/signal"
@@ -49,7 +49,7 @@ func main() {
 	srv := &server.Server{}
 
 	go func() {
-		if err := srv.Run(srvconfig.ServerPort, handlers.InitRoutes(handler)); err != nil {
+		if err := srv.Run(srvconfig.ServerPort, handler.InitRoutes()); err != nil {
 			logger.Error(fmt.Sprintf("error occurring while running server, err:%s", err.Error()))
 		}
 	}()

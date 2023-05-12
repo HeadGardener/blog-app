@@ -2,7 +2,7 @@ package repositories
 
 import (
 	"context"
-	"github.com/HeadGardener/blog-app/user-service/configs"
+	"github.com/HeadGardener/blog-app/comment-service/configs"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	usersCollection = "users"
+	commentsCollection = "comments"
 )
 
 func NewMongoDBCollection(ctx context.Context, config configs.DBConfig) (*mongo.Collection, error) {
@@ -32,5 +32,5 @@ func NewMongoDBCollection(ctx context.Context, config configs.DBConfig) (*mongo.
 
 	db := client.Database(config.DBName)
 
-	return db.Collection(usersCollection), nil
+	return db.Collection(commentsCollection), nil
 }

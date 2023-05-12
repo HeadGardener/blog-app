@@ -6,11 +6,11 @@ import (
 )
 
 type User struct {
-	ID           string `json:"id"`
-	Name         string `json:"name"`
-	Surname      string `json:"surname"`
-	Email        string `json:"email"`
-	PasswordHash string `json:"password_hash"`
+	ID           string `json:"id" bson:"id"`
+	Name         string `json:"name" bson:"name"`
+	Surname      string `json:"surname" bson:"surname"`
+	Email        string `json:"email" bson:"email"`
+	PasswordHash string `json:"password_hash" bson:"password_hash"`
 }
 
 type CreateUserInput struct {

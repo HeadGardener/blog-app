@@ -12,7 +12,7 @@ func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 	var userInput models.CreateUserInput
 
 	if err := json.NewDecoder(r.Body).Decode(&userInput); err != nil {
-		responses.NewErrResponse(w, http.StatusBadRequest, err.Error(), h.errLogger)
+		responses.NewErrResponse(w, http.StatusBadRequest, "invalid data to decode user input", h.errLogger)
 		return
 	}
 
@@ -36,7 +36,7 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 	var userInput models.LogUserInput
 
 	if err := json.NewDecoder(r.Body).Decode(&userInput); err != nil {
-		responses.NewErrResponse(w, http.StatusBadRequest, err.Error(), h.errLogger)
+		responses.NewErrResponse(w, http.StatusBadRequest, "invalid data to decode user input", h.errLogger)
 		return
 	}
 
