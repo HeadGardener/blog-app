@@ -1,8 +1,7 @@
-package post
+package handlers
 
 import (
 	"encoding/json"
-	mw "github.com/HeadGardener/blog-app/api-service/internal/app/handlers/middleware"
 	"github.com/HeadGardener/blog-app/api-service/internal/app/models"
 	"github.com/HeadGardener/blog-app/api-service/pkg/responses"
 	"github.com/go-chi/chi/v5"
@@ -11,7 +10,7 @@ import (
 )
 
 func (h *Handler) createPost(w http.ResponseWriter, r *http.Request) {
-	userID, err := mw.GetUserID(r)
+	userID, err := GetUserID(r)
 	if err != nil {
 		responses.NewErrResponse(w, http.StatusBadRequest, err.Error(), h.errLogger)
 		return
@@ -31,7 +30,7 @@ func (h *Handler) createPost(w http.ResponseWriter, r *http.Request) {
 
 	postInput.UserID = userID
 
-	postID, err := h.postService.CreatePost(r.Context(), postInput)
+	postID, err := h.service.CreatePost(r.Context(), postInput)
 	if err != nil {
 		responses.NewErrResponse(w, http.StatusInternalServerError, err.Error(), h.errLogger)
 		return
@@ -45,7 +44,7 @@ func (h *Handler) createPost(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) getByID(w http.ResponseWriter, r *http.Request) {
 	postID := chi.URLParam(r, "post_id")
 
-	post, err := h.postService.GetPostByID(r.Context(), postID)
+	post, err := h.service.GetPostByID(r.Context(), postID)
 	if err != nil {
 		responses.NewErrResponse(w, http.StatusInternalServerError, err.Error(), h.errLogger)
 		return
@@ -63,7 +62,7 @@ func (h *Handler) getUserPosts(w http.ResponseWriter, r *http.Request) {
 		postsAmount = "0"
 	}
 
-	posts, err := h.postService.GetPosts(r.Context(), userID, postsAmount)
+	posts, err := h.service.GetPosts(r.Context(), userID, postsAmount)
 	if err != nil {
 		responses.NewErrResponse(w, http.StatusInternalServerError, err.Error(), h.errLogger)
 		return
@@ -79,7 +78,7 @@ func (h *Handler) updatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userID, err := mw.GetUserID(r)
+	userID, err := GetUserID(r)
 	if err != nil {
 		responses.NewErrResponse(w, http.StatusBadRequest, err.Error(), h.errLogger)
 		return
@@ -89,7 +88,7 @@ func (h *Handler) updatePost(w http.ResponseWriter, r *http.Request) {
 	postID := chi.URLParam(r, "post_id")
 	postInput.ID = postID
 
-	post, err := h.postService.UpdatePost(r.Context(), postInput)
+	post, err := h.service.UpdatePost(r.Context(), postInput)
 	if err != nil {
 		responses.NewErrResponse(w, http.StatusInternalServerError, err.Error(), h.errLogger)
 	}
@@ -98,7 +97,7 @@ func (h *Handler) updatePost(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) deletePost(w http.ResponseWriter, r *http.Request) {
-	userID, err := mw.GetUserID(r)
+	userID, err := GetUserID(r)
 	if err != nil {
 		responses.NewErrResponse(w, http.StatusBadRequest, err.Error(), h.errLogger)
 		return
@@ -106,7 +105,7 @@ func (h *Handler) deletePost(w http.ResponseWriter, r *http.Request) {
 
 	postID := chi.URLParam(r, "post_id")
 
-	post, err := h.postService.DeletePost(r.Context(), postID, userID)
+	post, err := h.service.DeletePost(r.Context(), postID, userID)
 	if err != nil {
 		responses.NewErrResponse(w, http.StatusInternalServerError, err.Error(), h.errLogger)
 	}

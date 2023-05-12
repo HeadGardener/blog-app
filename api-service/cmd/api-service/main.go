@@ -6,10 +6,7 @@ import (
 	"fmt"
 	"github.com/HeadGardener/blog-app/api-service/configs"
 	"github.com/HeadGardener/blog-app/api-service/internal/app/handlers"
-	"github.com/HeadGardener/blog-app/api-service/internal/app/handlers/auth"
-	"github.com/HeadGardener/blog-app/api-service/internal/app/handlers/post"
-	post_service "github.com/HeadGardener/blog-app/api-service/internal/app/services/post"
-	user_service "github.com/HeadGardener/blog-app/api-service/internal/app/services/user"
+	"github.com/HeadGardener/blog-app/api-service/internal/app/services"
 	"github.com/HeadGardener/blog-app/api-service/internal/pkg/server"
 	"go.uber.org/zap"
 	"log"
@@ -29,23 +26,16 @@ func main() {
 		log.Fatal(fmt.Sprintf("error whilr creating logger: %s", err.Error()))
 	}
 
-	logger.Info("initializing router...")
-	router := handlers.NewRouter()
-
 	serviceConfig, err := configs.NewServiceConfig(*confPath)
 	if err != nil {
 		logger.Fatal(fmt.Sprintf("unable to read config file, error: %s", err.Error()))
 	}
 
-	logger.Info("initializing user service...")
-	userService := user_service.NewUserService(serviceConfig.UserServiceURL, "users")
-	authHandler := auth.NewAuthHandler(userService)
-	authHandler.InitRoutes(router)
+	logger.Info("initializing services...")
+	service := services.NewService(*serviceConfig)
 
-	logger.Info("initializing post service...")
-	postService := post_service.NewPostService(serviceConfig.PostServiceURL, "post")
-	postHandler := post.NewPostHandler(postService)
-	postHandler.InitRoutes(router)
+	logger.Info("initializing handlers...")
+	handler := handlers.NewHandler(service)
 
 	serverConfig, err := configs.NewServerConfig(*confPath)
 	if err != nil {
@@ -54,7 +44,7 @@ func main() {
 
 	srv := &server.Server{}
 	go func() {
-		if err := srv.Run(serverConfig.Port, router); err != nil {
+		if err := srv.Run(serverConfig.Port, handler.InitRoutes()); err != nil {
 			logger.Error(fmt.Sprintf("error occurring while running server, err:%s", err.Error()))
 		}
 	}()

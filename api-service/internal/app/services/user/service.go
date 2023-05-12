@@ -8,6 +8,11 @@ import (
 	"time"
 )
 
+type UserService interface {
+	Create(ctx context.Context, userInput models.CreateUserInput) (string, error)
+	GetUser(ctx context.Context, userInput models.LogUserInput) (models.User, error)
+}
+
 type service struct {
 	base     client.Client
 	Resource string
@@ -24,9 +29,4 @@ func NewUserService(baseURL, resource string) UserService {
 		},
 	}
 	return &service
-}
-
-type UserService interface {
-	Create(ctx context.Context, userInput models.CreateUserInput) (string, error)
-	GetUser(ctx context.Context, userInput models.LogUserInput) (models.User, error)
 }

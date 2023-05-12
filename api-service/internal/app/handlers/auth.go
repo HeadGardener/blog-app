@@ -1,4 +1,4 @@
-package auth
+package handlers
 
 import (
 	"encoding/json"
@@ -21,7 +21,7 @@ func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userID, err := h.userService.Create(r.Context(), userInput)
+	userID, err := h.service.Create(r.Context(), userInput)
 	if err != nil {
 		responses.NewErrResponse(w, http.StatusInternalServerError, err.Error(), h.errLogger)
 		return
@@ -45,7 +45,7 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := h.userService.GetUser(r.Context(), userInput)
+	user, err := h.service.GetUser(r.Context(), userInput)
 	if err != nil {
 		responses.NewErrResponse(w, http.StatusInternalServerError, err.Error(), h.errLogger)
 		return

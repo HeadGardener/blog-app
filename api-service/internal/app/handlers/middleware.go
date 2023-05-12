@@ -1,9 +1,8 @@
-package mw
+package handlers
 
 import (
 	"context"
 	"errors"
-	"github.com/HeadGardener/blog-app/api-service/internal/app/handlers"
 	"github.com/HeadGardener/blog-app/api-service/internal/app/models"
 	jwt_helper "github.com/HeadGardener/blog-app/api-service/pkg/jwt-helper"
 	"github.com/HeadGardener/blog-app/api-service/pkg/responses"
@@ -13,7 +12,7 @@ import (
 
 const userCtx = "userAtr"
 
-var mwLogger = handlers.NewLogger()
+var mwLogger = NewLogger()
 
 func IdentifyUser(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

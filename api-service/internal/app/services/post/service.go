@@ -8,6 +8,14 @@ import (
 	"time"
 )
 
+type PostService interface {
+	CreatePost(ctx context.Context, postInput models.CreatePostInput) (string, error)
+	GetPostByID(ctx context.Context, id string) (models.Post, error)
+	GetPosts(ctx context.Context, userID string, postsAmount string) ([]models.Post, error)
+	UpdatePost(ctx context.Context, postInput models.UpdatePostInput) (models.Post, error)
+	DeletePost(ctx context.Context, postID, userID string) (models.Post, error)
+}
+
 type service struct {
 	base     client.Client
 	Resource string
@@ -24,12 +32,4 @@ func NewPostService(baseURL, resource string) PostService {
 		},
 	}
 	return &service
-}
-
-type PostService interface {
-	CreatePost(ctx context.Context, postInput models.CreatePostInput) (string, error)
-	GetPostByID(ctx context.Context, id string) (models.Post, error)
-	GetPosts(ctx context.Context, userID string, postsAmount string) ([]models.Post, error)
-	UpdatePost(ctx context.Context, postInput models.UpdatePostInput) (models.Post, error)
-	DeletePost(ctx context.Context, postID, userID string) (models.Post, error)
 }
