@@ -44,6 +44,7 @@ func (h *Handler) InitRoutes() http.Handler {
 		r.Get("/{post_id}", h.getByID)
 		r.Get("/", h.getUserPosts)
 		r.Put("/", h.updatePost)
+		r.Delete("/{post_id}", h.deletePost)
 	})
 	return r
 }

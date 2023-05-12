@@ -31,4 +31,5 @@ type PostService interface {
 	GetPostByID(ctx context.Context, id string) (models.Post, error)
 	GetPosts(ctx context.Context, userID string, postsAmount string) ([]models.Post, error)
 	UpdatePost(ctx context.Context, postInput models.UpdatePostInput) (models.Post, error)
+	DeletePost(ctx context.Context, postID, userID string) (models.Post, error)
 }

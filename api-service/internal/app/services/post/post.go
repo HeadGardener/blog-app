@@ -159,3 +159,36 @@ func (s *service) UpdatePost(ctx context.Context, postInput models.UpdatePostInp
 	}
 	return post, nil
 }
+
+func (s *service) DeletePost(ctx context.Context, postID, userID string) (models.Post, error) {
+	url := fmt.Sprintf("%s/%s/%s?user_id=%s", s.base.BaseURL, s.Resource, postID, userID)
+
+	req, err := http.NewRequest(http.MethodDelete, url, bytes.NewBuffer([]byte("")))
+	if err != nil {
+		return models.Post{}, fmt.Errorf("failed to create request: error: %w", err)
+	}
+
+	reqCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	req = req.WithContext(reqCtx)
+	response, err := s.base.SendRequest(req)
+	defer response.Body.Close()
+	if err != nil {
+		return models.Post{}, fmt.Errorf("failed to send request: error: %w", err)
+	}
+
+	if response.StatusCode != http.StatusOK {
+		var errMsg responses.ErrResponse
+		if err := json.NewDecoder(response.Body).Decode(&errMsg); err != nil {
+			return models.Post{}, fmt.Errorf("unpredictable error")
+		}
+
+		return models.Post{}, fmt.Errorf("%s", errMsg.Message)
+	}
+
+	var post models.Post
+	if err := json.NewDecoder(response.Body).Decode(&post); err != nil {
+		return models.Post{}, fmt.Errorf("error while decoding response: error: %w", err)
+	}
+	return post, nil
+}

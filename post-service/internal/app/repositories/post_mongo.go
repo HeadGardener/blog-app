@@ -81,3 +81,17 @@ func (r *PostRepository) UpdatePost(ctx context.Context, post models.Post) (mode
 
 	return updatedPost, nil
 }
+
+func (r *PostRepository) DeletePost(ctx context.Context, postID, userID string) (models.Post, error) {
+	var deletedPost models.Post
+
+	insertCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	filters := bson.D{{"id", postID}, {"userid", userID}}
+	if err := r.db.FindOneAndDelete(insertCtx, filters).Decode(&deletedPost); err != nil {
+		return models.Post{}, err
+	}
+
+	return deletedPost, nil
+}

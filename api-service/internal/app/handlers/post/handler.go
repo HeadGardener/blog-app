@@ -28,6 +28,7 @@ func (h *Handler) InitRoutes(router *chi.Mux) {
 		r.Get("/{post_id}", h.getByID)
 		r.Get("/", h.getUserPosts)
 		r.Put("/{post_id}", h.updatePost)
+		r.Delete("/{post_id}", h.deletePost)
 	})
 
 	router.Mount("/api/post", r)

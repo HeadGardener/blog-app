@@ -26,6 +26,11 @@ type UpdatePostInput struct {
 	Body   *string `json:"body"`
 }
 
+type DeletePost struct {
+	ID     string `json:"id"`
+	UserID string `json:"user_id"`
+}
+
 func (p *CreatePostInput) Validate() error {
 	if p.Body == "" {
 		return errors.New("post body can't be empty")

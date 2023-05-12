@@ -11,6 +11,7 @@ type PostInterface interface {
 	GetByID(ctx context.Context, postID string) (models.Post, error)
 	GetPosts(ctx context.Context, userID string, postsAmount int) ([]models.Post, error)
 	UpdatePost(ctx context.Context, postInput models.Post) (models.Post, error)
+	DeletePost(ctx context.Context, postID, userID string) (models.Post, error)
 }
 
 type Repository struct {

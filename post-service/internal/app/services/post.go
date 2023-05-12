@@ -46,3 +46,7 @@ func (s *PostService) UpdatePost(ctx context.Context, postInput models.UpdatePos
 
 	return s.repository.PostInterface.UpdatePost(ctx, post)
 }
+
+func (s *PostService) DeletePost(ctx context.Context, postID, userID string) (models.Post, error) {
+	return s.repository.PostInterface.DeletePost(ctx, postID, userID)
+}

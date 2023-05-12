@@ -76,3 +76,16 @@ func (h *Handler) updatePost(w http.ResponseWriter, r *http.Request) {
 
 	newResponse(w, http.StatusOK, post)
 }
+
+func (h *Handler) deletePost(w http.ResponseWriter, r *http.Request) {
+	userID := r.URL.Query().Get("user_id")
+	postID := chi.URLParam(r, "post_id")
+
+	post, err := h.service.PostInterface.DeletePost(r.Context(), postID, userID)
+	if err != nil {
+		h.newErrResponse(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	newResponse(w, http.StatusOK, post)
+}
