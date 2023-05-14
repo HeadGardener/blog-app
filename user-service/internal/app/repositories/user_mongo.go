@@ -22,7 +22,7 @@ func (r *UserRepository) GetUser(ctx context.Context, user models.User) (models.
 
 	result := r.db.FindOne(insertCtx, bson.D{
 		{"email", user.Email},
-		{"passwordhash", user.PasswordHash}})
+		{"password_hash", user.PasswordHash}})
 
 	if err := result.Decode(&user); err != nil {
 		return models.User{}, err

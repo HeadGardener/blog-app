@@ -50,7 +50,7 @@ func IdentifyUser(next http.Handler) http.Handler {
 	})
 }
 
-func GetUserID(r *http.Request) (string, error) {
+func getUserID(r *http.Request) (string, error) {
 	workerCtxValue := r.Context().Value(userCtx)
 	workerAttributes, ok := workerCtxValue.(models.UserAttributes)
 	if !ok {

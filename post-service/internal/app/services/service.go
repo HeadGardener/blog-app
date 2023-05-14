@@ -7,7 +7,7 @@ import (
 )
 
 type PostInterface interface {
-	Create(ctx context.Context, postInput models.CreatePostInput) (string, error)
+	CreatePost(ctx context.Context, postInput models.CreatePostInput) (string, error)
 	GetByID(ctx context.Context, postID string) (models.Post, error)
 	GetPosts(ctx context.Context, userID string, postsAmount int) ([]models.Post, error)
 	UpdatePost(ctx context.Context, postInput models.UpdatePostInput) (models.Post, error)

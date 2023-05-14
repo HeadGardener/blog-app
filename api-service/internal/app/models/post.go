@@ -15,7 +15,7 @@ type Post struct {
 }
 
 type CreatePostInput struct {
-	UserID string `json:"userID"`
+	UserID string `json:"user_id"`
 	Title  string `json:"title"`
 	Body   string `json:"body"`
 }

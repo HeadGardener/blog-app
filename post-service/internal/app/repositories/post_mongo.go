@@ -53,7 +53,7 @@ func (r *PostRepository) GetPosts(ctx context.Context, userID string, postsAmoun
 
 	opts := options.Find().SetLimit(int64(postsAmount)).SetSort(bson.D{{"date", 1}})
 	cur, err := r.db.Find(insertCtx, bson.D{{
-		"userid", userID,
+		"user_id", userID,
 	}}, opts)
 	if err != nil {
 		return nil, err
@@ -73,7 +73,7 @@ func (r *PostRepository) UpdatePost(ctx context.Context, post models.Post) (mode
 	defer cancel()
 
 	opts := options.FindOneAndUpdate().SetUpsert(false)
-	filters := bson.D{{"id", post.ID}, {"userid", post.UserID}}
+	filters := bson.D{{"id", post.ID}, {"user_id", post.UserID}}
 	update := bson.D{{"$set", bson.D{{"title", post.Title}, {"body", post.Body}}}}
 	if err := r.db.FindOneAndUpdate(insertCtx, filters, update, opts).Decode(&updatedPost); err != nil {
 		return models.Post{}, err

@@ -7,7 +7,10 @@ import (
 )
 
 type CommentInterface interface {
-	Create(ctx context.Context, comment models.Comment) (string, error)
+	CreateComment(ctx context.Context, comment models.Comment) (string, error)
+	GetByID(ctx context.Context, commentID string) (models.Comment, error)
+	GetComments(ctx context.Context, postID string, amount int) ([]models.Comment, error)
+	UpdateComment(ctx context.Context, comment models.Comment) (models.Comment, error)
 }
 
 type Repository struct {

@@ -14,6 +14,7 @@ import (
 func (s *service) CreatePost(ctx context.Context, postInput models.CreatePostInput) (string, error) {
 	url := fmt.Sprintf("%s/%s/", s.base.BaseURL, s.Resource)
 
+	fmt.Println(postInput)
 	dataBytes, err := json.Marshal(postInput)
 	if err != nil {
 		return "", err

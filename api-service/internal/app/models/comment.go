@@ -19,6 +19,12 @@ type CreateCommentInput struct {
 	Body   string `json:"body"`
 }
 
+type UpdateCommentInput struct {
+	ID     string  `json:"id"`
+	UserID string  `json:"user_id"`
+	Body   *string `json:"body"`
+}
+
 func (c *CreateCommentInput) Validate() error {
 	if c.PostID == "" {
 		return errors.New("invalid or empty post id")

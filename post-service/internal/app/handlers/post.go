@@ -21,7 +21,7 @@ func (h *Handler) createPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	postID, err := h.service.PostInterface.Create(r.Context(), postInput)
+	postID, err := h.service.PostInterface.CreatePost(r.Context(), postInput)
 	if err != nil {
 		h.newErrResponse(w, http.StatusInternalServerError, err.Error())
 		return
@@ -65,6 +65,11 @@ func (h *Handler) updatePost(w http.ResponseWriter, r *http.Request) {
 	var postInput models.UpdatePostInput
 	if err := json.NewDecoder(r.Body).Decode(&postInput); err != nil {
 		h.newErrResponse(w, http.StatusBadRequest, "invalid data to decode post input")
+		return
+	}
+
+	if err := postInput.Validate(); err != nil {
+		h.newErrResponse(w, http.StatusBadRequest, err.Error())
 		return
 	}
 

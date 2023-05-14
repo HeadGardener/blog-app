@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"errors"
 	"github.com/HeadGardener/blog-app/post-service/internal/app/models"
 	"github.com/HeadGardener/blog-app/post-service/internal/app/repositories"
 	"github.com/google/uuid"
@@ -16,7 +17,7 @@ func NewPostService(repository *repositories.Repository) *PostService {
 	return &PostService{repository: repository}
 }
 
-func (s *PostService) Create(ctx context.Context, postInput models.CreatePostInput) (string, error) {
+func (s *PostService) CreatePost(ctx context.Context, postInput models.CreatePostInput) (string, error) {
 	post := models.Post{
 		ID:     uuid.NewString(),
 		UserID: postInput.UserID,
@@ -40,6 +41,10 @@ func (s *PostService) UpdatePost(ctx context.Context, postInput models.UpdatePos
 	post, err := s.repository.GetByID(ctx, postInput.ID)
 	if err != nil {
 		return models.Post{}, err
+	}
+	
+	if post.UserID != postInput.UserID {
+		return models.Post{}, errors.New("this is not your post")
 	}
 
 	postInput.ToPost(&post)

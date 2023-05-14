@@ -37,6 +37,13 @@ func (p *CreatePostInput) Validate() error {
 	return nil
 }
 
+func (p *UpdatePostInput) Validate() error {
+	if p.ID == "" || p.UserID == "" {
+		return errors.New("invalid or empty ids values")
+	}
+	return nil
+}
+
 func (p *UpdatePostInput) ToPost(post *Post) {
 	if p.Title != nil && post.Title != *p.Title {
 		post.Title = *p.Title

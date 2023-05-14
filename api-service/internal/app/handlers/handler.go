@@ -49,6 +49,8 @@ func (h *Handler) InitRoutes() http.Handler {
 		r.Route("/comment", func(r chi.Router) {
 			r.Use(IdentifyUser)
 			r.Post("/", h.createComment)
+			r.Get("/", h.getPostComments)
+			r.Put("/{comment_id}", h.updateComment)
 		})
 	})
 	return r

@@ -10,7 +10,7 @@ import (
 )
 
 func (h *Handler) createPost(w http.ResponseWriter, r *http.Request) {
-	userID, err := GetUserID(r)
+	userID, err := getUserID(r)
 	if err != nil {
 		responses.NewErrResponse(w, http.StatusBadRequest, err.Error(), h.errLogger)
 		return
@@ -78,15 +78,14 @@ func (h *Handler) updatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userID, err := GetUserID(r)
+	userID, err := getUserID(r)
 	if err != nil {
 		responses.NewErrResponse(w, http.StatusBadRequest, err.Error(), h.errLogger)
 		return
 	}
 	postInput.UserID = userID
 
-	postID := chi.URLParam(r, "post_id")
-	postInput.ID = postID
+	postInput.ID = chi.URLParam(r, "post_id")
 
 	post, err := h.service.UpdatePost(r.Context(), postInput)
 	if err != nil {
@@ -97,7 +96,7 @@ func (h *Handler) updatePost(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) deletePost(w http.ResponseWriter, r *http.Request) {
-	userID, err := GetUserID(r)
+	userID, err := getUserID(r)
 	if err != nil {
 		responses.NewErrResponse(w, http.StatusBadRequest, err.Error(), h.errLogger)
 		return
