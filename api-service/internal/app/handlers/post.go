@@ -107,6 +107,12 @@ func (h *Handler) deletePost(w http.ResponseWriter, r *http.Request) {
 	post, err := h.service.DeletePost(r.Context(), postID, userID)
 	if err != nil {
 		responses.NewErrResponse(w, http.StatusInternalServerError, err.Error(), h.errLogger)
+		return
+	}
+
+	if err := h.service.CommentService.DeleteAllPostComments(r.Context(), postID); err != nil {
+		responses.NewErrResponse(w, http.StatusInternalServerError, err.Error(), h.errLogger)
+		return
 	}
 
 	responses.NewResponse(w, http.StatusOK, post)

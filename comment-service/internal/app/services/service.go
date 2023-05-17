@@ -10,6 +10,8 @@ type CommentInterface interface {
 	CreateComment(ctx context.Context, commentInput models.CreateCommentInput) (string, error)
 	GetComments(ctx context.Context, postID string, amount int) ([]models.Comment, error)
 	UpdateComment(ctx context.Context, commentInput models.UpdateCommentInput) (models.Comment, error)
+	DeleteAllPostComments(ctx context.Context, postID string) error
+	DeleteComment(ctx context.Context, commentID, userID string) (models.Comment, error)
 }
 
 type Service struct {

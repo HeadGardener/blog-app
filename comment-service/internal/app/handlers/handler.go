@@ -43,6 +43,8 @@ func (h *Handler) InitRoutes() http.Handler {
 		r.Post("/", h.createComment)
 		r.Get("/", h.getComments)
 		r.Put("/", h.updateComment)
+		r.Delete("/post/{post_id}", h.deleteAllPostComments)
+		r.Delete("/{comment_id}", h.deleteComment)
 	})
 	return r
 }

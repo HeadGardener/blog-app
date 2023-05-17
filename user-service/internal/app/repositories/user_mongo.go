@@ -17,10 +17,10 @@ func NewUserRepository(db *mongo.Collection) *UserRepository {
 }
 
 func (r *UserRepository) GetUser(ctx context.Context, user models.User) (models.User, error) {
-	insertCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	getCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	result := r.db.FindOne(insertCtx, bson.D{
+	result := r.db.FindOne(getCtx, bson.D{
 		{"email", user.Email},
 		{"password_hash", user.PasswordHash}})
 

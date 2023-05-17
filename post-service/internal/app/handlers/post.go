@@ -83,8 +83,8 @@ func (h *Handler) updatePost(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) deletePost(w http.ResponseWriter, r *http.Request) {
-	userID := r.URL.Query().Get("user_id")
 	postID := chi.URLParam(r, "post_id")
+	userID := r.URL.Query().Get("user_id")
 
 	post, err := h.service.PostInterface.DeletePost(r.Context(), postID, userID)
 	if err != nil {

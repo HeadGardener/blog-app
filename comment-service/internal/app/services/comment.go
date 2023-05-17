@@ -47,3 +47,11 @@ func (s *CommentService) UpdateComment(ctx context.Context, commentInput models.
 
 	return s.repository.CommentInterface.UpdateComment(ctx, comment)
 }
+
+func (s *CommentService) DeleteAllPostComments(ctx context.Context, postID string) error {
+	return s.repository.CommentInterface.DeleteAllPostComments(ctx, postID)
+}
+
+func (s *CommentService) DeleteComment(ctx context.Context, commentID, userID string) (models.Comment, error) {
+	return s.repository.CommentInterface.DeleteComment(ctx, commentID, userID)
+}

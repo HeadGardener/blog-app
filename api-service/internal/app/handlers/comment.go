@@ -84,3 +84,21 @@ func (h *Handler) updateComment(w http.ResponseWriter, r *http.Request) {
 
 	responses.NewResponse(w, http.StatusOK, comment)
 }
+
+func (h *Handler) deleteComment(w http.ResponseWriter, r *http.Request) {
+	userID, err := getUserID(r)
+	if err != nil {
+		responses.NewErrResponse(w, http.StatusBadRequest, err.Error(), h.errLogger)
+		return
+	}
+
+	commentID := chi.URLParam(r, "comment_id")
+
+	comment, err := h.service.CommentService.DeleteComment(r.Context(), commentID, userID)
+	if err != nil {
+		responses.NewErrResponse(w, http.StatusInternalServerError, err.Error(), h.errLogger)
+		return
+	}
+
+	responses.NewResponse(w, http.StatusOK, comment)
+}

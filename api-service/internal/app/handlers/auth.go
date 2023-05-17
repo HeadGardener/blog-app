@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/HeadGardener/blog-app/api-service/internal/app/models"
 	jwtHelper "github.com/HeadGardener/blog-app/api-service/pkg/jwt-helper"
 	"github.com/HeadGardener/blog-app/api-service/pkg/responses"
@@ -44,6 +45,8 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 		responses.NewErrResponse(w, http.StatusBadRequest, err.Error(), h.errLogger)
 		return
 	}
+
+	fmt.Println(userInput)
 
 	user, err := h.service.GetUser(r.Context(), userInput)
 	if err != nil {

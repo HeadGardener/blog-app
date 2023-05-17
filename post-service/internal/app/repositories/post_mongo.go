@@ -32,10 +32,10 @@ func (r *PostRepository) Create(ctx context.Context, post models.Post) (string, 
 func (r *PostRepository) GetByID(ctx context.Context, postID string) (models.Post, error) {
 	var post models.Post
 
-	insertCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	getCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	result := r.db.FindOne(insertCtx, bson.D{
+	result := r.db.FindOne(getCtx, bson.D{
 		{"id", postID}})
 
 	if err := result.Decode(&post); err != nil {
@@ -48,18 +48,18 @@ func (r *PostRepository) GetByID(ctx context.Context, postID string) (models.Pos
 func (r *PostRepository) GetPosts(ctx context.Context, userID string, postsAmount int) ([]models.Post, error) {
 	var posts []models.Post
 
-	insertCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	getCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
 	opts := options.Find().SetLimit(int64(postsAmount)).SetSort(bson.D{{"date", 1}})
-	cur, err := r.db.Find(insertCtx, bson.D{{
+	cur, err := r.db.Find(getCtx, bson.D{{
 		"user_id", userID,
 	}}, opts)
 	if err != nil {
 		return nil, err
 	}
 
-	if err := cur.All(insertCtx, &posts); err != nil {
+	if err := cur.All(getCtx, &posts); err != nil {
 		return nil, err
 	}
 
@@ -69,13 +69,13 @@ func (r *PostRepository) GetPosts(ctx context.Context, userID string, postsAmoun
 func (r *PostRepository) UpdatePost(ctx context.Context, post models.Post) (models.Post, error) {
 	var updatedPost models.Post
 
-	insertCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	updateCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
 	opts := options.FindOneAndUpdate().SetUpsert(false)
 	filters := bson.D{{"id", post.ID}, {"user_id", post.UserID}}
 	update := bson.D{{"$set", bson.D{{"title", post.Title}, {"body", post.Body}}}}
-	if err := r.db.FindOneAndUpdate(insertCtx, filters, update, opts).Decode(&updatedPost); err != nil {
+	if err := r.db.FindOneAndUpdate(updateCtx, filters, update, opts).Decode(&updatedPost); err != nil {
 		return models.Post{}, err
 	}
 
@@ -85,11 +85,11 @@ func (r *PostRepository) UpdatePost(ctx context.Context, post models.Post) (mode
 func (r *PostRepository) DeletePost(ctx context.Context, postID, userID string) (models.Post, error) {
 	var deletedPost models.Post
 
-	insertCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	deleteCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	filters := bson.D{{"id", postID}, {"userid", userID}}
-	if err := r.db.FindOneAndDelete(insertCtx, filters).Decode(&deletedPost); err != nil {
+	filters := bson.D{{"id", postID}, {"user_id", userID}}
+	if err := r.db.FindOneAndDelete(deleteCtx, filters).Decode(&deletedPost); err != nil {
 		return models.Post{}, err
 	}
 

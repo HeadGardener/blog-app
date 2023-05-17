@@ -11,6 +11,8 @@ type CommentInterface interface {
 	GetByID(ctx context.Context, commentID string) (models.Comment, error)
 	GetComments(ctx context.Context, postID string, amount int) ([]models.Comment, error)
 	UpdateComment(ctx context.Context, comment models.Comment) (models.Comment, error)
+	DeleteAllPostComments(ctx context.Context, postID string) error
+	DeleteComment(ctx context.Context, commentID, userID string) (models.Comment, error)
 }
 
 type Repository struct {

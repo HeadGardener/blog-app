@@ -125,3 +125,65 @@ func (s *service) UpdateComment(ctx context.Context, commentInput models.UpdateC
 	}
 	return comment, nil
 }
+
+func (s *service) DeleteAllPostComments(ctx context.Context, postID string) error {
+	url := fmt.Sprintf("%s/%s/post/%s", s.base.BaseURL, s.Resource, postID)
+
+	req, err := http.NewRequest(http.MethodDelete, url, bytes.NewBuffer([]byte("")))
+	if err != nil {
+		return fmt.Errorf("failed to create request: error: %w", err)
+	}
+
+	reqCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	req = req.WithContext(reqCtx)
+	response, err := s.base.SendRequest(req)
+	defer response.Body.Close()
+	if err != nil {
+		return fmt.Errorf("failed to send request: error: %w", err)
+	}
+
+	if response.StatusCode != http.StatusOK {
+		var errMsg responses.ErrResponse
+		if err := json.NewDecoder(response.Body).Decode(&errMsg); err != nil {
+			return fmt.Errorf("unpredictable error")
+		}
+
+		return fmt.Errorf("%s", errMsg.Message)
+	}
+
+	return nil
+}
+
+func (s *service) DeleteComment(ctx context.Context, commentID, userID string) (models.Comment, error) {
+	url := fmt.Sprintf("%s/%s/%s?user_id=%s", s.base.BaseURL, s.Resource, commentID, userID)
+
+	req, err := http.NewRequest(http.MethodDelete, url, bytes.NewBuffer([]byte("")))
+	if err != nil {
+		return models.Comment{}, fmt.Errorf("failed to create request: error: %w", err)
+	}
+
+	reqCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	req = req.WithContext(reqCtx)
+	response, err := s.base.SendRequest(req)
+	defer response.Body.Close()
+	if err != nil {
+		return models.Comment{}, fmt.Errorf("failed to send request: error: %w", err)
+	}
+
+	if response.StatusCode != http.StatusOK {
+		var errMsg responses.ErrResponse
+		if err := json.NewDecoder(response.Body).Decode(&errMsg); err != nil {
+			return models.Comment{}, fmt.Errorf("unpredictable error")
+		}
+
+		return models.Comment{}, fmt.Errorf("%s", errMsg.Message)
+	}
+
+	var comment models.Comment
+	if err := json.NewDecoder(response.Body).Decode(&comment); err != nil {
+		return models.Comment{}, fmt.Errorf("error while decoding response: error: %w", err)
+	}
+	return comment, nil
+}
